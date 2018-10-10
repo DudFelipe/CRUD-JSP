@@ -15,6 +15,7 @@ import java.math.BigDecimal;
  * @author Dud Felipe
  */
 public class Produto {
+    private int id;
     private String nome;
     private String descricao;
     private BigDecimal precoCompra;
@@ -22,7 +23,8 @@ public class Produto {
     private int qtd;
     private String [] cats;
 
-    public Produto(String nome, String descricao, BigDecimal precoCompra, BigDecimal precoVenda, int qtd, String[] cats) {
+    public Produto(int id, String nome, String descricao, BigDecimal precoCompra, BigDecimal precoVenda, int qtd, String[] cats) {
+        this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.precoCompra = precoCompra;
@@ -35,6 +37,16 @@ public class Produto {
 
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    
+    
     public String getNome() {
         return nome;
     }

@@ -10,6 +10,7 @@ import Modelos.Produto;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,6 +28,12 @@ public class IncluirServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        int id = Integer.parseInt(request.getParameter("id"));
+        Produto p = ProdutoBLL.obterProduto(id);
+        
+        request.setAttribute("nome", p.getNome());
+        
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/produto/cadastro.jsp");
         dispatcher.forward(request, response);
     }
@@ -43,10 +50,11 @@ public class IncluirServlet extends HttpServlet {
         p.setPrecoCompra(BigDecimal.valueOf(Double.parseDouble(request.getParameter("prcompra"))));
         p.setPrecoVenda(BigDecimal.valueOf(Double.parseDouble(request.getParameter("prvenda"))));
         p.setQtd(Integer.parseInt(request.getParameter("qtd")));
-        //p.setCats(request.getParameterValues("cat"));
+        p.setCats(request.getParameterValues("cat"));
         
         try{
             ProdutoBLL.Inserir(p);
+            
         }
         catch(Exception ex){
             out.println(ex.getMessage());
