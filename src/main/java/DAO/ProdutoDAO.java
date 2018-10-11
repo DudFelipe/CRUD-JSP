@@ -88,8 +88,8 @@ public class ProdutoDAO {
         Connection conn = null;
         PreparedStatement pst = null;
         String url = "jdbc:mysql://localhost/PRODUTOBD";
-        String sql = "UPDATE PRODUTO SET Nome = ?, Descricao = ?, Preco_Compra = ?, Preco_Venda = ?, Quantidade = ?, DT_Cadastro = ?) "
-                + "WHERE id = ?";
+        String sql = "UPDATE PRODUTO SET Nome = ?, Descricao = ?, Preco_Compra = ?, Preco_Venda = ?, Quantidade = ?, DT_Cadastro = ? "
+                + " WHERE id = ?;";
         try{
             Class.forName("com.mysql.jdbc.Driver");
             
@@ -143,6 +143,38 @@ public class ProdutoDAO {
         }
     }
     
+    public static void excluir(int id){
+        Connection conn = null;
+        PreparedStatement pst = null;
+        String url = "jdbc:mysql://localhost/PRODUTOBD";
+        String sql = "DELETE FROM produto_categoria WHERE id_produto = ?";
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            
+            //Propriedades para armazenamento de usuário e senha
+            Properties properties = new Properties();
+            properties.put("user", "root");
+            properties.put("password", "");
+            properties.put("serverTimezone", "UTC");
+            
+            conn = DriverManager.getConnection(url, properties);
+            pst = conn.prepareStatement(sql);
+            
+            pst.setInt(1, id);
+            
+            pst.executeUpdate();
+            
+            sql = "DELETE FROM produto WHERE id = ?";
+            pst = conn.prepareStatement(sql);
+            
+            pst.setInt(1, id);
+            pst.executeUpdate();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    
     public static List<Produto> listarProdutos(){
         Connection conn = null;
         PreparedStatement pst = null;
@@ -187,7 +219,7 @@ public class ProdutoDAO {
         Connection conn = null;
         PreparedStatement pst = null;
         String url = "jdbc:mysql://localhost/PRODUTOBD";
-        String sql = "SELECT * FROM Produto WHERE id = ?";
+        String sql = "SELECT * FROM Produto WHERE id = ?;";
         
         try{
             Class.forName("com.mysql.jdbc.Driver");
@@ -203,7 +235,7 @@ public class ProdutoDAO {
             
             pst.setInt(1, id);
             
-            ResultSet rs = pst.executeQuery(sql);
+            ResultSet rs = pst.executeQuery();
             
             if(rs.next()){
                 Produto p = new Produto();

@@ -26,6 +26,22 @@ public class ProdutoBLL {
         ProdutoDAO.Inserir(p);
     }
     
+    public static void alterar(Produto p) throws Exception{
+        if(p.getNome().equals("") || p.getNome() == null){
+            throw new Exception("O campo nome é obrigatório!");
+        }
+        
+        if(p.getQtd() <= 0){
+            throw new Exception("A quantidade deve ser positiva!");
+        }
+        
+        ProdutoDAO.alterar(p);
+    }
+    
+    public static void excluir(int id){
+        ProdutoDAO.excluir(id);
+    }
+    
     public static List<Produto> listarProdutos(){
         return ProdutoDAO.listarProdutos();
     }

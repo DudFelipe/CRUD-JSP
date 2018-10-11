@@ -10,7 +10,6 @@ import Modelos.Produto;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,12 +21,17 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Dud Felipe
  */
-@WebServlet(name = "IncluirServlet", urlPatterns = {"/produto/incluir"})
-public class IncluirServlet extends HttpServlet {
+@WebServlet(name = "AlteraServlet", urlPatterns = {"/AlteraServlet"})
+public class AlteraServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        int id = Integer.parseInt(request.getParameter("id"));
+        Produto p = ProdutoBLL.obterProduto(id);
+        
+        request.setAttribute("produto", p);
         
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/produto/cadastro.jsp");
         dispatcher.forward(request, response);
@@ -36,26 +40,24 @@ public class IncluirServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
         
-        Produto p = new Produto();
+        int id = Integer.parseInt(request.getParameter("id"));
+        Produto p = ProdutoBLL.obterProduto(id);
         
         p.setNome(request.getParameter("nome"));
         p.setDescricao(request.getParameter("descricao"));
         p.setPrecoCompra(BigDecimal.valueOf(Double.parseDouble(request.getParameter("prcompra"))));
         p.setPrecoVenda(BigDecimal.valueOf(Double.parseDouble(request.getParameter("prvenda"))));
         p.setQtd(Integer.parseInt(request.getParameter("qtd")));
-        p.setCats(request.getParameterValues("cat"));
         
         try{
-            ProdutoBLL.Inserir(p);
-            
+            ProdutoBLL.alterar(p);
         }
         catch(Exception ex){
-            out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         
-        RequestDispatcher dispatcher = request.getRequestDispatcher("../index.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
         dispatcher.forward(request, response);
     }
 }

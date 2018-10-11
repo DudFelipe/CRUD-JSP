@@ -30,8 +30,8 @@
                             </c:forEach>
                         </ul>
                     </td>
-                    <td><a href="${pageContext.request.contextPath}/produto/incluir?id=${p.getId()}">Alterar</a></td>
-                    <td><a>Excluir</a></td>
+                    <td><a href="${pageContext.request.contextPath}/AlteraServlet?id=${p.getId()}">Alterar</a></td>
+                    <td><a href="${pageContext.request.contextPath}/ExcluiServlet?id=${p.getId()}">Excluir</a></td>
                 </tr>
             </c:forEach>
         </table>
