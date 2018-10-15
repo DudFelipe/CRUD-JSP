@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -118,20 +119,28 @@ public class ProdutoDAO {
             pst.executeUpdate();
             
             if(p.getCats().length > 0){
+                
+                sql = "DELETE FROM PRODUTO_CATEGORIA WHERE id_produto = ?";
+                
+                pst = conn.prepareStatement(sql);
+                pst.setInt(1, p.getId());
+                
+                pst.execute();
+                
                 for(int i = 0; i < p.getCats().length; i++){
-                    sql = "UPDATE produto_categoria SET id_categoria = ? WHERE id_produto = ?";
+                    sql = "INSERT INTO produto_categoria (id_produto, id_categoria) VALUES(?, ?)";
 
                     pst = conn.prepareStatement(sql);
-                    pst.setInt(2, p.getId());
+                    pst.setInt(1, p.getId());
                     
                     if(p.getCats()[i].equals("A")){
-                        pst.setInt(1, 1);
+                        pst.setInt(2, 1);
                     }
                     else if(p.getCats()[i].equals("B")){
-                        pst.setInt(1, 2);
+                        pst.setInt(2, 2);
                     }
                     else if(p.getCats()[i].equals("C")){
-                        pst.setInt(1, 3);
+                        pst.setInt(2, 3);
                     }
                     
                     pst.execute();
@@ -180,7 +189,9 @@ public class ProdutoDAO {
         PreparedStatement pst = null;
         String url = "jdbc:mysql://localhost/PRODUTOBD";
         String sql = "SELECT * FROM Produto";
+        
         List<Produto> lista = new LinkedList<Produto>();
+        List<String>categorias = new LinkedList<String>();
         try{
             Class.forName("com.mysql.jdbc.Driver");
             
@@ -196,6 +207,7 @@ public class ProdutoDAO {
             ResultSet rs = pst.executeQuery(sql);
             
             while(rs.next()){
+                
                 Produto p = new Produto();
                 
                 p.setId(rs.getInt("id"));
@@ -207,6 +219,23 @@ public class ProdutoDAO {
                 
                 lista.add(p);
             }
+            
+            for(int i = 0; i < lista.size(); i++){
+                sql = "SELECT PRODUTO.ID, PRODUTO_CATEGORIA.ID_CATEGORIA, CATEGORIA.NOME FROM PRODUTO, PRODUTO_CATEGORIA, CATEGORIA " + 
+                      " WHERE PRODUTO.ID = PRODUTO_CATEGORIA.ID_PRODUTO AND CATEGORIA.ID = PRODUTO_CATEGORIA.ID_CATEGORIA AND PRODUTO.ID = ?";
+                
+                pst = conn.prepareStatement(sql);
+                pst.setInt(1, lista.get(i).getId());
+                
+                ResultSet rsCat = pst.executeQuery();
+                while(rsCat.next()){
+                    categorias.add(rsCat.getString("NOME"));
+                }
+                
+                lista.get(i).setCats(categorias.toArray(new String[0]));
+                categorias.clear();
+            }
+            
             return lista;
         }
         catch(Exception ex){
@@ -220,6 +249,8 @@ public class ProdutoDAO {
         PreparedStatement pst = null;
         String url = "jdbc:mysql://localhost/PRODUTOBD";
         String sql = "SELECT * FROM Produto WHERE id = ?;";
+        
+        List<String>categorias = new LinkedList<String>();
         
         try{
             Class.forName("com.mysql.jdbc.Driver");
@@ -246,6 +277,20 @@ public class ProdutoDAO {
                 p.setPrecoCompra(rs.getBigDecimal("Preco_Compra"));
                 p.setPrecoVenda(rs.getBigDecimal("Preco_Venda"));
                 p.setQtd(rs.getInt("Quantidade"));
+                
+                sql = "SELECT PRODUTO.ID, PRODUTO_CATEGORIA.ID_CATEGORIA, CATEGORIA.NOME FROM PRODUTO, PRODUTO_CATEGORIA, CATEGORIA " + 
+                      " WHERE PRODUTO.ID = PRODUTO_CATEGORIA.ID_PRODUTO AND CATEGORIA.ID = PRODUTO_CATEGORIA.ID_CATEGORIA AND PRODUTO.ID = ?";
+                
+                pst = conn.prepareStatement(sql);
+                pst.setInt(1, p.getId());
+                
+                ResultSet rsCat = pst.executeQuery();
+                while(rsCat.next()){
+                    categorias.add(rsCat.getString("NOME"));
+                }
+                
+                p.setCats(categorias.toArray(new String[0]));
+                categorias.clear();
                 
                 return p;
             }

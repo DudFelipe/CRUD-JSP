@@ -49,6 +49,7 @@ public class AlteraServlet extends HttpServlet {
         p.setPrecoCompra(BigDecimal.valueOf(Double.parseDouble(request.getParameter("prcompra"))));
         p.setPrecoVenda(BigDecimal.valueOf(Double.parseDouble(request.getParameter("prvenda"))));
         p.setQtd(Integer.parseInt(request.getParameter("qtd")));
+        p.setCats(request.getParameterValues("cat"));
         
         try{
             ProdutoBLL.alterar(p);

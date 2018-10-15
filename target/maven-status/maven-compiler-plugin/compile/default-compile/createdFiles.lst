@@ -1,4 +1,7 @@
 br\senac\tads\pi3a\ado_crudproduto\IncluirServlet.class
 Modelos\Produto.class
 DAO\ProdutoDAO.class
+br\senac\tads\pi3a\ado_crudproduto\AlteraServlet.class
+br\senac\tads\pi3a\ado_crudproduto\ExcluiServlet.class
+br\senac\tads\pi3a\ado_crudproduto\ListarServlet.class
 BLL\ProdutoBLL.class

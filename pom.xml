@@ -14,6 +14,19 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
+    <developers>
+        <developer>
+            <name>Eduardo Felipe Serra</name>
+            <email>efelipe10@hotmail.com</email>
+            <organization>Senac</organization>
+        </developer>
+        <developer>
+            <name>Giovane Barreira</name>
+            <email>giovane.barreira@gmail.com</email>
+            <organization>Senac</organization>
+        </developer>
+    </developers>
+    
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
